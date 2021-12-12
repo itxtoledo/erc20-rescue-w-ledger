@@ -1,0 +1,27 @@
+{
+  "name": "erc20-rescue-w-ledger",
+  "version": "1.0.0",
+  "description": "Code for rescue ERC20 tokens from specific addresses with ledger device",
+  "main": "index.js",
+  "scripts": {
+    "start": "node src/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/itxtoledo/erc20-rescue-w-ledger.git"
+  },
+  "keywords": [],
+  "author": "Gustavo",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/itxtoledo/erc20-rescue-w-ledger/issues"
+  },
+  "homepage": "https://github.com/itxtoledo/erc20-rescue-w-ledger#readme",
+  "dependencies": {
+    "@ledgerhq/hw-app-eth": "^6.18.0",
+    "@ledgerhq/hw-transport-node-hid": "^6.11.2",
+    "csv-parser": "^3.0.0",
+    "ethereumjs-tx": "^2.1.2",
+    "web3": "^1.6.1"
+  }
+}
