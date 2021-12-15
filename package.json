@@ -4,7 +4,7 @@
   "description": "Code for rescue ERC20 tokens from specific addresses with ledger device",
   "main": "index.js",
   "scripts": {
-    "start": "node src/index.js"
+    "start": "node -r esm src/index.js"
   },
   "repository": {
     "type": "git",
@@ -21,6 +21,7 @@
     "@ledgerhq/hw-app-eth": "^6.18.0",
     "@ledgerhq/hw-transport-node-hid": "^6.11.2",
     "csv-parser": "^3.0.0",
+    "esm": "^3.2.25",
     "ethereumjs-tx": "^2.1.2",
     "web3": "^1.6.1"
   }

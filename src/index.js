@@ -1,9 +1,12 @@
-const Transport = require("@ledgerhq/hw-transport-node-hid").default;
-const AppEth = require("@ledgerhq/hw-app-eth").default;
-const Tx = require("ethereumjs-tx").Transaction;
-const Web3 = require("web3");
+import Transport from "@ledgerhq/hw-transport-node-hid";
+import AppEth from "@ledgerhq/hw-app-eth";
+import { Transaction as Tx } from "ethereumjs-tx";
+import Web3 from "web3";
+import abi from "./abi.json";
 
 const web3 = new Web3("https://mainnet.infura.io:443");
+
+const cbrl = new web3.eth.Contract(abi, "");
 
 async function main() {
   const index = 1;
