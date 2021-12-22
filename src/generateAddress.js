@@ -19,7 +19,7 @@ async function main() {
   const transport = await Transport.create();
   const eth = new AppEth(transport);
 
-  const addr = await eth.getAddress(DERIVATION_PATH);
+  const addr = await eth.getAddress(DERIVATION_PATH, true, true);
 
   console.log("Address:", addr);
 }

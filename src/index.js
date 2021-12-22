@@ -7,6 +7,10 @@ import { hideBin } from "yargs/helpers";
 import Web3 from "web3";
 import abi from "./abi.json";
 
+const CHAIN_ID = 3; // mainnet is 1 ropsten is 3
+const CHAIN = "ropsten"; // can be ropsten or mainnet
+const GAS_PRICE = 10; // in gwei
+
 const argv = yargs(hideBin(process.argv))
   .positional("owner", {
     describe: "owner address that you need withdrawal tokens",
@@ -22,7 +26,6 @@ const DERIVATION_PATH = process.env.BASE_PATH + argv.path;
 
 const RESCUE_ADDRESS = process.env.RESCUE_ADDRESS;
 const TOKEN_ADDRESS = process.env.TOKEN_ADDRESS;
-const GAS_PRICE = 20; // in gwei
 
 console.log("Owner Address:", OWNER_ADDRESS);
 console.log("Derivation Path:", DERIVATION_PATH);
@@ -57,14 +60,19 @@ async function main() {
   console.log("Call data:", callData);
 
   const txData = {
-    // nonce: web3.utils.toHex(0),
-    gasLimit: web3.utils.toHex(21000),
+    nonce: await web3.eth.getTransactionCount(OWNER_ADDRESS),
+    gasLimit: web3.utils.toHex(50000),
     gasPrice: web3.utils.toHex(GAS_PRICE * 10 ** 9), // convert wei to gwei
     to: TOKEN_ADDRESS,
-    from: OWNER_ADDRESS,
+    data: callData,
   };
 
-  const tx = new Tx(txData, { chain: "mainnet" });
+  const tx = new Tx(txData, { chain: CHAIN });
+
+  // hack to work https://github.com/LedgerHQ/ledgerjs/issues/436
+  tx.raw[6] = Buffer.from([CHAIN_ID]); // v
+  tx.raw[7] = Buffer.from([]); // r
+  tx.raw[8] = Buffer.from([]); // s
 
   const serializedTx = tx.serialize().toString("hex");
 
@@ -74,18 +82,29 @@ async function main() {
 
   const sig = await eth.signTransaction(DERIVATION_PATH, serializedTx);
 
-  console.log("Signed transaction:", sig);
+  console.log("Signature:", sig);
 
-  // txData.v = "0x" + sig.v;
-  // txData.r = "0x" + sig.r;
-  // txData.s = "0x" + sig.s;
+  txData.v = "0x" + sig.v;
+  txData.r = "0x" + sig.r;
+  txData.s = "0x" + sig.s;
 
-  // const signedTx = new Tx(txData);
-  // const signedSerializedTx = signedTx.serialize().toString("hex");
-  // const txHash = await web3.eth.sendSignedTransaction(
-  //   "0x" + signedSerializedTx
-  // );
-  // console.log(txHash);
+  const signedTx = new Tx(txData, { chain: CHAIN });
+  const signedSerializedTx = signedTx.serialize().toString("hex");
+
+  console.log(
+    "Sender Address (only for verification): ",
+    "0x" + signedTx.getSenderAddress().toString("hex")
+  );
+
+  console.log("Signed Transaction:", signedSerializedTx);
+
+  console.log("Sending transaction.");
+  const txHash = await web3.eth.sendSignedTransaction(
+    "0x" + signedSerializedTx
+  );
+
+  console.log("Transaction sent.");
+  console.log("TxID:", txHash);
 }
 
 main();
