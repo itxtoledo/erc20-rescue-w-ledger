@@ -1,4 +1,4 @@
-# erc20-rescue-w-ledger
+# ERC20 Rescuer with Ledger 
 
 Code for rescuing ERC20 tokens from specific addresses using a ledger hardware wallet.
 
