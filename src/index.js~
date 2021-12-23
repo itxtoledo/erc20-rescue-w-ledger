@@ -9,7 +9,7 @@ import abi from "./abi.json";
 
 const CHAIN_ID = 1; // mainnet is 1 ropsten is 3
 const CHAIN = "mainnet"; // can be ropsten or mainnet
-const GAS_PRICE = 110; // in gwei
+const GAS_PRICE = 123; // in gwei
 const GAS_LIMIT = 65000;
 
 const argv = yargs(hideBin(process.argv))
